@@ -17,6 +17,8 @@ config/icon="res://icon.svg"
 
 [display]
 
+window/size/viewport_width=1280
+window/size/viewport_height=720
 window/stretch/mode="viewport"
 
 [editor]
@@ -26,7 +28,12 @@ version_control/autoload_on_startup=true
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/AsepriteWizard/plugin.cfg")
+enabled=PackedStringArray("res://addons/AsepriteWizard/plugin.cfg", "res://addons/github_to_itch/plugin.cfg")
+
+[github_to_itch]
+
+config/itch_username="bren077s"
+config/itch_project_name="head-smash"
 
 [rendering]
 
