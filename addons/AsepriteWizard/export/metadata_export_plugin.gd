@@ -2,6 +2,9 @@ extends EditorExportPlugin
 
 const wizard_config = preload("../config/wizard_config.gd")
 
+func _get_name():
+	return "AsepriteWizard"
+
 func _export_file(path: String, type: String, features: PackedStringArray) -> void:
 	if type != "PackedScene": return
 
@@ -49,7 +52,7 @@ func _get_scene_content(path:String, scene:PackedScene) -> PackedByteArray:
 
 	var tmp_file = FileAccess.open(tmp_path, FileAccess.READ)
 	var content : PackedByteArray = tmp_file.get_buffer(tmp_file.get_length())
-	tmp_file.close()
+	# tmp_file.close()
 
 	if FileAccess.file_exists(tmp_path):
 		DirAccess.remove_absolute(tmp_path)
