@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://cmimbdadmui2v"]
+
+[ext_resource type="PackedScene" uid="uid://cnsuckm1vre7g" path="res://tile_map.tscn" id="1_381m1"]
+[ext_resource type="PackedScene" uid="uid://c331v1etrbg4v" path="res://player.tscn" id="2_r8p2t"]
+
+[node name="Main" type="Node2D"]
+
+[node name="TileMap" parent="." instance=ExtResource("1_381m1")]
+layer_0/tile_data = PackedInt32Array(917517, 65536, 1, 917518, 65536, 1, 917519, 65536, 1, 917520, 65536, 1, 917521, 65536, 1, 917522, 65536, 1, 917523, 65536, 1, 917524, 65536, 1, 917525, 65536, 1, 851989, 65536, 1, 786453, 65536, 1, 786454, 65536, 1, 720918, 65536, 1, 720919, 65536, 1, 851988, 65536, 1, 589841, 65536, 1, 589840, 65536, 1, 589839, 65536, 1, 589838, 65536, 1, 589837, 65536, 1, 917516, 65536, 1, 917515, 65536, 1, 917514, 65536, 1, 917513, 65536, 1, 917512, 65536, 1, 917511, 65536, 1, 917510, 65536, 1, 917509, 65536, 1, 917508, 65536, 1, 917507, 65536, 1, 917506, 65536, 1, 917504, 65536, 1, 917505, 65536, 1, 851968, 65536, 1, 786437, 65536, 1, 786438, 65536, 1, 786439, 65536, 1)
+
+[node name="Player" parent="." instance=ExtResource("2_r8p2t")]
+position = Vector2(537, 365)
