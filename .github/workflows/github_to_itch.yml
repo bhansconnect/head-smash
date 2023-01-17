@@ -32,21 +32,21 @@ jobs:
   
   - name: Download + Authorize Godot
     run: |
-       curl -L -o godot.zip https://downloads.tuxfamily.org/godotengine/4.0/beta10/Godot_v4.0-beta10_linux.x86_64.zip
+       curl -L -o godot.zip https://downloads.tuxfamily.org/godotengine/4.0/beta13/Godot_v4.0-beta13_linux.x86_64.zip
        unzip godot.zip
-       mv Godot_v4.0-beta10_linux.x86_64 godot
+       mv Godot_v4.0-beta13_linux.x86_64 godot
        ls
        chmod +x godot
  
   - name: Download Export Templates
     run: |
-     curl -L -o export_templates.zip https://downloads.tuxfamily.org/godotengine/4.0/beta10/Godot_v4.0-beta10_export_templates.tpz
+     curl -L -o export_templates.zip https://downloads.tuxfamily.org/godotengine/4.0/beta13/Godot_v4.0-beta13_export_templates.tpz
      unzip export_templates.zip
   
   - name: Install Export Templates
     run: |
-     mkdir -p ~/.local/share/godot/export_templates/4.0.beta10
-     mv ./templates/* ~/.local/share/godot/export_templates/4.0.beta10
+     mkdir -p ~/.local/share/godot/export_templates/4.0.beta13
+     mv ./templates/* ~/.local/share/godot/export_templates/4.0.beta13
   
   - name: Export Web
     run: |
@@ -132,6 +132,9 @@ jobs:
     
     - name: Login To Butler
       run: ./butler login
+    
+    - name: Push Web to Itch
+      run: ./butler push ./export/web bren077s/head-smash:web --userversion-file ./VERSION/VERSION.txt
     
 
  Cleanup:
