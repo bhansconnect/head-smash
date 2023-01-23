@@ -150,6 +150,8 @@ func _input(event: InputEvent):
 		# Otherwise you have to tap a key twice.
 		Input.parse_input_event(event)
 
+var seen_generic_controllers = []
+
 func get_device_type(device_name: String) -> Device:
 	match device_name:
 		"XInput Gamepad", "Xbox Series Controller":
@@ -162,8 +164,9 @@ func get_device_type(device_name: String) -> Device:
 			return Device.SWITCH
 		
 		_:
-			print_debug("Found unknown controller type: ", device_name)
-			print_debug("Using generic controller setup")
+			if device_name not in seen_generic_controllers:
+				print_debug("Using generic controller setup for unknown controller type: ", device_name)
+			seen_generic_controllers.append(device_name)
 			return Device.GENERIC_CONTROLLER
 
 func has_gamepad() -> bool:
