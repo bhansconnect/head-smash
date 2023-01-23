@@ -58,6 +58,10 @@ func _physics_process(delta):
 
 	move_and_slide()
 	handle_sprite_flip(direction)
+	
+	# Emergency reset for now.
+	if velocity.y > 2000:
+		get_tree().reload_current_scene()
 
 func next_state(current_state):
 	var on_floor = is_on_floor()
