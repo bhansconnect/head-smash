@@ -162,6 +162,8 @@ func get_device_type(device_name: String) -> Device:
 			return Device.SWITCH
 		
 		_:
+			print_debug("Found unknown controller type: ", device_name)
+			print_debug("Using generic controller setup")
 			return Device.GENERIC_CONTROLLER
 
 func has_gamepad() -> bool:
@@ -174,7 +176,6 @@ func guess_device_type() -> Device:
 	return get_device_type(Input.get_joy_name(0))
 
 func update_device(next_device: Device, _index: int):
-	print_debug(next_device)
 	InputMap.action_erase_events("jump")
 	InputMap.action_erase_events("left")
 	InputMap.action_erase_events("right")
