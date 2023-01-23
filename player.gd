@@ -32,7 +32,7 @@ func _physics_process(delta):
 			apply_gravity(delta)
 			apply_x_movement(WALK_SPEED, direction)
 			if velocity.x != 0:
-				_animation_player.play("run")
+				_animation_player.play("walk")
 			else:
 				_animation_player.play("idle")
 		State.CROUCH:
@@ -60,7 +60,7 @@ func _physics_process(delta):
 	handle_sprite_flip(direction)
 
 func next_state(current_state):
-	var is_on_floor = is_on_floor()
+	var on_floor = is_on_floor()
 	var crouch = Input.is_action_pressed("crouch")
 	# TODO: Add coyote timing and pre jump
 	var jump = Input.is_action_pressed("jump")
@@ -70,7 +70,7 @@ func next_state(current_state):
 				return State.FALL
 			return State.JUMP
 		State.WALK:
-			if !is_on_floor:
+			if !on_floor:
 				return State.FALL
 			if jump:
 				return State.JUMP
@@ -81,7 +81,7 @@ func next_state(current_state):
 			if _front_ray_cast2d.is_colliding() or _back_ray_cast2d.is_colliding():
 				# Something is blocking uncrouching. Must stay crouched.
 				return State.CROUCH
-			if !is_on_floor:
+			if !on_floor:
 				return State.FALL
 			if jump:
 				return State.JUMP
@@ -89,7 +89,7 @@ func next_state(current_state):
 				return State.WALK
 			return State.CROUCH
 		State.FALL:
-			if is_on_floor:
+			if on_floor:
 				if crouch:
 					return State.CROUCH
 				else:
