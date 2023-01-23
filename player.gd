@@ -18,13 +18,13 @@ func _physics_process(delta):
 	if not is_on_floor():
 		velocity.y += gravity * delta
 
-	var crouching = Input.is_action_pressed("ui_down")
+	var crouching = Input.is_action_pressed("crouch")
 	var jump_animation = "crouch-jump" if crouching else "jump"
 	var move_animation = "crouch-walk" if crouching else "run"
 	var idle_animation = "crouch-idle" if crouching else "idle"
 	var speed = WALK_SPEED if crouching else RUN_SPEED
 	
-	var direction = Input.get_axis("ui_left", "ui_right")
+	var direction = Input.get_axis("left", "right")
 	if direction:
 		velocity.x = direction * speed
 	else:
@@ -39,7 +39,7 @@ func _physics_process(delta):
 		_sprite2d.scale.x = 1
 	
 	if is_on_floor():
-		if Input.is_action_pressed("ui_up"):
+		if Input.is_action_pressed("jump"):
 			velocity.y = JUMP_VELOCITY
 			_animation_player.play(jump_animation)
 			_animation_player.seek(0.5, true)
