@@ -4,19 +4,26 @@ extends CharacterBody2D
 @onready var _sprite2d = $Sprite2D
 @onready var _front_ray_cast2d = $FrontRayCast2D
 @onready var _back_ray_cast2d = $BackRayCast2D
+@onready var _jump_buffer_timer = $JumpBufferTimer
+@onready var _coyote_timer = $CoyoteTimer
 
 @export var CROUCH_SPEED = 75.0
 @export var WALK_SPEED = 400.0
 @export var ACCELERATION = 100.0
 @export var FRICTION = 200.0
-@export var JUMP_VELOCITY = -400.0
+@export var JUMP_VELOCITY = -500.0
+@export var JUMP_RELEASE_VELOCITY = -60.0
+@export var ADDITIONAL_FALL_GRAVITY = 400.0
+
+# Get the gravity from the project settings to be synced with RigidBody nodes.
+var GRAVITY = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 enum State {WALK, CROUCH, JUMP, FALL}
 
 var state = State.WALK
+var buffered_jump = false
+var just_fell = false
 
-# Get the gravity from the project settings to be synced with RigidBody nodes.
-var GRAVITY = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 func _ready():
 	pass
@@ -50,8 +57,11 @@ func _physics_process(delta):
 				velocity.y = JUMP_VELOCITY
 				_animation_player.play(jump_animation)
 				_animation_player.seek(0.5, true)
+			if !Input.is_action_pressed("jump") and velocity.y < JUMP_RELEASE_VELOCITY:
+				velocity.y = JUMP_RELEASE_VELOCITY
 		State.FALL:
 			apply_gravity(delta)
+			velocity.y += ADDITIONAL_FALL_GRAVITY * delta
 			apply_x_movement(WALK_SPEED, direction)
 			# TODO: Add all animation.
 			pass
@@ -67,7 +77,10 @@ func next_state(current_state):
 	var on_floor = is_on_floor()
 	var crouch = Input.is_action_pressed("crouch")
 	# TODO: Add coyote timing and pre jump
-	var jump = Input.is_action_pressed("jump")
+	if Input.is_action_just_pressed("jump"):
+		_jump_buffer_timer.start()
+		buffered_jump = true
+
 	match current_state:
 		State.JUMP:
 			if velocity.y >= 0:
@@ -75,8 +88,11 @@ func next_state(current_state):
 			return State.JUMP
 		State.WALK:
 			if !on_floor:
+				_coyote_timer.start()
+				just_fell = true
 				return State.FALL
-			if jump:
+			if buffered_jump:
+				buffered_jump = false
 				return State.JUMP
 			if crouch:
 				return State.CROUCH
@@ -86,13 +102,19 @@ func next_state(current_state):
 				# Something is blocking uncrouching. Must stay crouched.
 				return State.CROUCH
 			if !on_floor:
+				_coyote_timer.start()
+				just_fell = true
 				return State.FALL
-			if jump:
+			if buffered_jump:
+				buffered_jump = false
 				return State.JUMP
 			if !crouch:
 				return State.WALK
 			return State.CROUCH
 		State.FALL:
+			if just_fell and buffered_jump:
+				buffered_jump = false
+				return State.JUMP
 			if on_floor:
 				if crouch:
 					return State.CROUCH
@@ -120,3 +142,11 @@ func handle_sprite_flip(direction):
 		_sprite2d.scale.x = -1
 	elif velocity.x > 0:
 		_sprite2d.scale.x = 1
+
+
+func _on_jump_buffer_timer_timeout():
+	buffered_jump = false
+
+
+func _on_coyote_timer_timeout():
+	just_fell = false
