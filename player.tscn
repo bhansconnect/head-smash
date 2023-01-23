@@ -147,7 +147,6 @@ tracks/7/keys = {
 
 [sub_resource type="Animation" id="Animation_rmpyh"]
 length = 0.8
-loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -620,7 +619,6 @@ _data = {
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_avvhg")
-WALK_SPEED = 75.0
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
@@ -648,3 +646,11 @@ shape = SubResource("CapsuleShape2D_f46rp")
 libraries = {
 "": SubResource("AnimationLibrary_1kvbk")
 }
+
+[node name="FrontRayCast2D" type="RayCast2D" parent="."]
+position = Vector2(7, 5)
+target_position = Vector2(2.08165e-12, -27)
+
+[node name="BackRayCast2D" type="RayCast2D" parent="."]
+position = Vector2(-7, 5)
+target_position = Vector2(2.08165e-12, -27)

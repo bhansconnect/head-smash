@@ -2,48 +2,110 @@ extends CharacterBody2D
 
 @onready var _animation_player = $AnimationPlayer
 @onready var _sprite2d = $Sprite2D
+@onready var _front_ray_cast2d = $FrontRayCast2D
+@onready var _back_ray_cast2d = $BackRayCast2D
 
-@export var WALK_SPEED = 150.0
-@export var RUN_SPEED = 400.0
+@export var CROUCH_SPEED = 75.0
+@export var WALK_SPEED = 400.0
+@export var ACCELERATION = 100.0
+@export var FRICTION = 200.0
 @export var JUMP_VELOCITY = -400.0
 
+enum State {WALK, CROUCH, JUMP, FALL}
+
+var state = State.WALK
+
 # Get the gravity from the project settings to be synced with RigidBody nodes.
-var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
+var GRAVITY = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 func _ready():
 	pass
 
 func _physics_process(delta):
-	# Add the gravity.
-	if not is_on_floor():
-		velocity.y += gravity * delta
-
-	var crouching = Input.is_action_pressed("crouch")
-	var jump_animation = "crouch-jump" if crouching else "jump"
-	var move_animation = "crouch-walk" if crouching else "run"
-	var idle_animation = "crouch-idle" if crouching else "idle"
-	var speed = WALK_SPEED if crouching else RUN_SPEED
+	var last_state = state
+	state = next_state(state)
 	
-	var direction = Input.get_axis("left", "right")
-	if direction:
-		velocity.x = direction * speed
-	else:
-		velocity.x = move_toward(velocity.x, 0, speed)
+	match (state):
+		State.WALK:
+			apply_gravity(delta)
+			apply_x_movement(WALK_SPEED)
+			if velocity.x != 0:
+				_animation_player.play("run")
+			else:
+				_animation_player.play("idle")
+		State.CROUCH:
+			apply_gravity(delta)
+			apply_x_movement(CROUCH_SPEED)
+			if velocity.x != 0:
+				_animation_player.play("crouch-walk")
+			else:
+				_animation_player.play("crouch-idle")
+		State.JUMP:
+			apply_gravity(delta)
+			apply_x_movement(WALK_SPEED)
+			if last_state != State.JUMP:
+				var jump_animation = "crouch-jump" if last_state == State.CROUCH else "jump"
+				velocity.y = JUMP_VELOCITY
+				_animation_player.play(jump_animation)
+				_animation_player.seek(0.5, true)
+		State.FALL:
+			apply_gravity(delta)
+			apply_x_movement(WALK_SPEED)
+			pass
 
 	move_and_slide()
-	
-	
+	handle_sprite_flip()
+
+func next_state(current_state):
+	var is_on_floor = is_on_floor()
+	var crouch = Input.is_action_pressed("crouch")
+	# TODO: Add coyote timing and pre jump
+	var jump = Input.is_action_just_pressed("jump")
+	match current_state:
+		State.JUMP:
+			if velocity.y >= 0:
+				return State.FALL
+			return State.JUMP
+		State.WALK:
+			if !is_on_floor:
+				return State.FALL
+			if jump:
+				return State.JUMP
+			if crouch:
+				return State.CROUCH
+			return State.WALK
+		State.CROUCH:
+			if _front_ray_cast2d.is_colliding() or _back_ray_cast2d.is_colliding():
+				# Something is blocking uncrouching. Must stay crouched.
+				return State.CROUCH
+			if !is_on_floor:
+				return State.FALL
+			if jump:
+				return State.JUMP
+			if !crouch:
+				return State.WALK
+			return State.CROUCH
+		State.FALL:
+			if is_on_floor:
+				if crouch:
+					return State.CROUCH
+				else:
+					return State.WALK
+			return State.FALL
+
+func apply_x_movement(speed):
+	var direction = Input.get_axis("left", "right")
+	if direction:
+		velocity.x = move_toward(velocity.x, direction * speed, ACCELERATION)
+	else:
+		velocity.x = move_toward(velocity.x, 0, FRICTION)
+
+func apply_gravity(delta):
+	if not is_on_floor():
+		velocity.y += GRAVITY * delta
+
+func handle_sprite_flip():
 	if velocity.x < 0:
 		_sprite2d.scale.x = -1
 	elif velocity.x > 0:
 		_sprite2d.scale.x = 1
-	
-	if is_on_floor():
-		if Input.is_action_pressed("jump"):
-			velocity.y = JUMP_VELOCITY
-			_animation_player.play(jump_animation)
-			_animation_player.seek(0.5, true)
-		elif velocity.x != 0:
-			_animation_player.play(move_animation)
-		else:
-			_animation_player.play(idle_animation)
