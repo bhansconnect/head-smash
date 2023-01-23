@@ -1,7 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://c331v1etrbg4v"]
+[gd_scene load_steps=13 format=3 uid="uid://c331v1etrbg4v"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_avvhg"]
 [ext_resource type="Texture2D" uid="uid://bwjjlwppq7l38" path="res://art/generated/player.png" id="2_0ch4g"]
+[ext_resource type="Script" path="res://input_manager.gd" id="3_qp6e5"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_f46rp"]
 radius = 7.0
@@ -710,5 +711,9 @@ one_shot = true
 wait_time = 0.1
 one_shot = true
 
+[node name="InputManager" type="Node" parent="."]
+script = ExtResource("3_qp6e5")
+
 [connection signal="timeout" from="JumpBufferTimer" to="." method="_on_jump_buffer_timer_timeout"]
 [connection signal="timeout" from="CoyoteTimer" to="." method="_on_coyote_timer_timeout"]
+[connection signal="device_changed" from="InputManager" to="InputManager" method="_on_device_changed"]

@@ -24,7 +24,6 @@ var state = State.WALK
 var buffered_jump = false
 var just_fell = false
 
-
 func _ready():
 	pass
 
