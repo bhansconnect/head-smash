@@ -657,6 +657,8 @@ _data = {
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_avvhg")
+JUMP_VELOCITY = -525.0
+JUMP_RELEASE_VELOCITY = -125.0
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
