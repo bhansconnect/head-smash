@@ -25,24 +25,26 @@ func _physics_process(delta):
 	var last_state = state
 	state = next_state(state)
 	
+	var direction = Input.get_axis("left", "right")
+	
 	match (state):
 		State.WALK:
 			apply_gravity(delta)
-			apply_x_movement(WALK_SPEED)
+			apply_x_movement(WALK_SPEED, direction)
 			if velocity.x != 0:
 				_animation_player.play("run")
 			else:
 				_animation_player.play("idle")
 		State.CROUCH:
 			apply_gravity(delta)
-			apply_x_movement(CROUCH_SPEED)
+			apply_x_movement(CROUCH_SPEED, direction)
 			if velocity.x != 0:
 				_animation_player.play("crouch-walk")
 			else:
 				_animation_player.play("crouch-idle")
 		State.JUMP:
 			apply_gravity(delta)
-			apply_x_movement(WALK_SPEED)
+			apply_x_movement(WALK_SPEED, direction)
 			if last_state != State.JUMP:
 				var jump_animation = "crouch-jump" if last_state == State.CROUCH else "jump"
 				velocity.y = JUMP_VELOCITY
@@ -50,17 +52,18 @@ func _physics_process(delta):
 				_animation_player.seek(0.5, true)
 		State.FALL:
 			apply_gravity(delta)
-			apply_x_movement(WALK_SPEED)
+			apply_x_movement(WALK_SPEED, direction)
+			# TODO: Add all animation.
 			pass
 
 	move_and_slide()
-	handle_sprite_flip()
+	handle_sprite_flip(direction)
 
 func next_state(current_state):
 	var is_on_floor = is_on_floor()
 	var crouch = Input.is_action_pressed("crouch")
 	# TODO: Add coyote timing and pre jump
-	var jump = Input.is_action_just_pressed("jump")
+	var jump = Input.is_action_pressed("jump")
 	match current_state:
 		State.JUMP:
 			if velocity.y >= 0:
@@ -93,8 +96,7 @@ func next_state(current_state):
 					return State.WALK
 			return State.FALL
 
-func apply_x_movement(speed):
-	var direction = Input.get_axis("left", "right")
+func apply_x_movement(speed, direction):
 	if direction:
 		velocity.x = move_toward(velocity.x, direction * speed, ACCELERATION)
 	else:
@@ -104,7 +106,12 @@ func apply_gravity(delta):
 	if not is_on_floor():
 		velocity.y += GRAVITY * delta
 
-func handle_sprite_flip():
+func handle_sprite_flip(direction):
+	if velocity.x == 0:
+		if direction < 0:
+			_sprite2d.scale.x = -1
+		elif direction > 0:
+			_sprite2d.scale.x = 1
 	if velocity.x < 0:
 		_sprite2d.scale.x = -1
 	elif velocity.x > 0:
