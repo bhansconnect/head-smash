@@ -117,6 +117,7 @@ func _ready():
 	mappings[Device.SWITCH][ACTION_INTERACT] = [event]
 	
 	device = guess_device_type()
+	update_device(device, device_index)
 	emit_signal("device_changed", device, device_index)
 	
 
@@ -142,6 +143,7 @@ func _input(event: InputEvent):
 		
 		device = next_device
 		device_index = next_device_index
+		update_device(device, device_index)
 		emit_signal("device_changed", device, device_index)
 		
 		# Repeat this event so it actually gets used.
@@ -171,7 +173,8 @@ func guess_device_type() -> Device:
 	
 	return get_device_type(Input.get_joy_name(0))
 
-func _on_device_changed(next_device: Device, _index: int):
+func update_device(next_device: Device, _index: int):
+	print_debug(next_device)
 	InputMap.action_erase_events("jump")
 	InputMap.action_erase_events("left")
 	InputMap.action_erase_events("right")

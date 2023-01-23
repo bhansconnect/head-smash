@@ -716,4 +716,3 @@ script = ExtResource("3_qp6e5")
 
 [connection signal="timeout" from="JumpBufferTimer" to="." method="_on_jump_buffer_timer_timeout"]
 [connection signal="timeout" from="CoyoteTimer" to="." method="_on_coyote_timer_timeout"]
-[connection signal="device_changed" from="InputManager" to="InputManager" method="_on_device_changed"]
