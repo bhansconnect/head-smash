@@ -160,7 +160,7 @@ func get_device_type(device_name: String) -> Device:
 		"Sony DualSense", "PS5 Controller", "PS4 Controller":
 			return Device.PLAYSTATION
 		
-		"Switch", "Lic Pro Controller":
+		"Switch", "Nintendo Switch Controller", "Lic Pro Controller":
 			return Device.SWITCH
 		
 		_:
