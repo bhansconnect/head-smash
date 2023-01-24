@@ -1,37 +1,39 @@
 extends CharacterBody2D
 
-@onready var _animation_player = $AnimationPlayer
-@onready var _sprite2d = $Sprite2D
-@onready var _front_ray_cast2d = $FrontRayCast2D
-@onready var _back_ray_cast2d = $BackRayCast2D
-@onready var _jump_buffer_timer = $JumpBufferTimer
-@onready var _coyote_timer = $CoyoteTimer
+@onready var _animation_player := $AnimationPlayer
+@onready var _sprite2d := $Sprite2D
+@onready var _front_ray_cast2d := $FrontRayCast2D
+@onready var _back_ray_cast2d := $BackRayCast2D
+@onready var _jump_buffer_timer := $JumpBufferTimer
+@onready var _coyote_timer := $CoyoteTimer
 
-@export var CROUCH_SPEED = 75.0
-@export var WALK_SPEED = 400.0
-@export var ACCELERATION = 100.0
-@export var FRICTION = 200.0
-@export var JUMP_VELOCITY = -500.0
-@export var JUMP_RELEASE_VELOCITY = -60.0
-@export var ADDITIONAL_FALL_GRAVITY = 400.0
+@export var CROUCH_SPEED: float = 75.0
+@export var WALK_SPEED: float = 400.0
+@export var ACCELERATION: float = 100.0
+@export var FRICTION: float = 200.0
+@export var JUMP_VELOCITY: float = -500.0
+@export var JUMP_RELEASE_VELOCITY: float = -60.0
+@export var ADDITIONAL_FALL_GRAVITY: float = 400.0
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
-var GRAVITY = ProjectSettings.get_setting("physics/2d/default_gravity")
+var GRAVITY: float = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 enum State {WALK, CROUCH, JUMP, FALL}
 
-var state = State.WALK
-var buffered_jump = false
-var just_fell = false
+var state: State = State.WALK
+
+# TODO: bools are very not DOD. Is there a better way to do this?
+var buffered_jump: bool = false
+var just_fell: bool = false
 
 func _ready():
 	pass
 
-func _physics_process(delta):
-	var last_state = state
+func _physics_process(delta: float):
+	var last_state: State = state
 	state = next_state(state)
 	
-	var direction = Input.get_axis("left", "right")
+	var direction: float = Input.get_axis("left", "right")
 	
 	match (state):
 		State.WALK:
@@ -72,9 +74,9 @@ func _physics_process(delta):
 	if velocity.y > 2000:
 		get_tree().reload_current_scene()
 
-func next_state(current_state):
-	var on_floor = is_on_floor()
-	var crouch = Input.is_action_pressed("crouch")
+func next_state(current_state: State) -> State:
+	var on_floor: bool = is_on_floor()
+	var crouch: bool = Input.is_action_pressed("crouch")
 	# TODO: Add coyote timing and pre jump
 	if Input.is_action_just_pressed("jump"):
 		_jump_buffer_timer.start()
@@ -120,18 +122,21 @@ func next_state(current_state):
 				else:
 					return State.WALK
 			return State.FALL
+	# Defualt
+	# TODO: If we add an IDLE switch this to idle.
+	return State.WALK
 
-func apply_x_movement(speed, direction):
+func apply_x_movement(speed: float, direction: float):
 	if direction:
 		velocity.x = move_toward(velocity.x, direction * speed, ACCELERATION)
 	else:
 		velocity.x = move_toward(velocity.x, 0, FRICTION)
 
-func apply_gravity(delta):
+func apply_gravity(delta: float):
 	if not is_on_floor():
 		velocity.y += GRAVITY * delta
 
-func handle_sprite_flip(direction):
+func handle_sprite_flip(direction: float):
 	if velocity.x == 0:
 		if direction < 0:
 			_sprite2d.scale.x = -1

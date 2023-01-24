@@ -6,7 +6,7 @@ signal device_changed
 
 enum Device {KEYBOARD, XBOX, SWITCH, PLAYSTATION, GENERIC_CONTROLLER}
 
-const DEVICE_TYPES = [
+const DEVICE_TYPES: Array[Device] = [
 	Device.KEYBOARD,
 	Device.XBOX,
 	Device.SWITCH,
@@ -20,7 +20,7 @@ const ACTION_JUMP: String = "jump"
 const ACTION_CROUCH: String = "crouch"
 const ACTION_INTERACT: String = "interact"
 
-const ACTIONS = [
+const ACTIONS: Array[String] = [
 	ACTION_LEFT,
 	ACTION_RIGHT,
 	ACTION_JUMP,
@@ -32,7 +32,7 @@ var device: Device = Device.KEYBOARD
 var device_index: int = -1
 var device_last_changed_at: int = 0
 
-var mappings = {}
+var mappings: Dictionary = {}
 
 func _ready():
 	for d in DEVICE_TYPES:
@@ -150,7 +150,7 @@ func _input(event: InputEvent):
 		# Otherwise you have to tap a key twice.
 		Input.parse_input_event(event)
 
-var seen_generic_controllers = []
+var seen_generic_controllers: Array[Device] = []
 
 func get_device_type(device_name: String) -> Device:
 	match device_name:
