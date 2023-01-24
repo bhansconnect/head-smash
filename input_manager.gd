@@ -163,11 +163,10 @@ func get_device_type(device_name: String) -> Device:
 		"Switch", "Nintendo Switch Controller", "Lic Pro Controller":
 			return Device.SWITCH
 		
-		_:
-			if device_name not in seen_generic_controllers:
-				print_debug("Using generic controller setup for unknown controller type: ", device_name)
-			seen_generic_controllers.append(device_name)
-			return Device.GENERIC_CONTROLLER
+	if device_name not in seen_generic_controllers:
+		print_debug("Using generic controller setup for unknown controller type: ", device_name)
+	seen_generic_controllers.append(device_name)
+	return Device.GENERIC_CONTROLLER
 
 func has_gamepad() -> bool:
 	return Input.get_connected_joypads().size() > 0
