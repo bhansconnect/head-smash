@@ -147,15 +147,7 @@ func apply_gravity(delta: float):
 		velocity.y += GRAVITY * delta
 
 func handle_sprite_flip(direction: float):
-	if velocity.x == 0:
-		if direction < 0:
-			_sprite2d.scale.x = -1
-		elif direction > 0:
-			_sprite2d.scale.x = 1
-	if velocity.x < 0:
-		_sprite2d.scale.x = -1
-	elif velocity.x > 0:
-		_sprite2d.scale.x = 1
+	_sprite2d.flip_h = (velocity.x == 0 and direction < 0) or velocity.x < 0
 
 
 func _on_jump_buffer_timer_timeout():
@@ -176,7 +168,7 @@ func _on_take_damage(_damage: float, hit_position: Vector2):
 		# already in knockback. ignore
 		return
 
-	var knockback_dir = Vector2(1,0).rotated(hit_position.angle_to_point(global_position))
+	var knockback_dir := hit_position.direction_to(global_position)
 	velocity = knockback_dir * KNOCKBACK_SPEED
 	apply_knockback = true
 	_knockback_timer.start()
