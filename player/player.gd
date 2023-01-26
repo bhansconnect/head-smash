@@ -12,6 +12,7 @@ extends CharacterBody2D
 @export var CROUCH_SPEED: float = 75.0
 @export var WALK_SPEED: float = 400.0
 @export var KNOCKBACK_SPEED: float = 500.0
+@export var KNOCKUP_MIN: float = 0.5
 @export var ACCELERATION: float = 50.0
 @export var FRICTION: float = 75.0
 @export var JUMP_VELOCITY: float = -500.0
@@ -169,6 +170,7 @@ func _on_take_damage(_damage: float, hit_position: Vector2):
 		return
 
 	var knockback_dir := hit_position.direction_to(global_position)
-	velocity = knockback_dir * KNOCKBACK_SPEED
+	knockback_dir.y = minf(-KNOCKUP_MIN, knockback_dir.y)
+	velocity = knockback_dir.normalized() * KNOCKBACK_SPEED
 	apply_knockback = true
 	_knockback_timer.start()
