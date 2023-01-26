@@ -14,7 +14,8 @@ extends CharacterBody2D
 @export var KNOCKBACK_SPEED: float = 500.0
 @export var KNOCKUP_MIN: float = 0.5
 @export var ACCELERATION: float = 3000.0
-@export var FRICTION: float = 4500.0
+@export var ONGROUND_FRICTION: float = 4500.0
+@export var INAIR_FRICTION: float = 1000.0
 @export var JUMP_VELOCITY: float = -500.0
 @export var JUMP_RELEASE_VELOCITY: float = -60.0
 @export var ADDITIONAL_FALL_GRAVITY: float = 400.0
@@ -43,21 +44,21 @@ func _physics_process(delta: float):
 	match (state):
 		State.WALK:
 			apply_gravity(delta)
-			apply_x_movement(delta, WALK_SPEED, direction)
+			apply_x_movement(delta, WALK_SPEED, direction, ONGROUND_FRICTION)
 			if velocity.x != 0:
 				_animation_player.play("walk")
 			else:
 				_animation_player.play("idle")
 		State.CROUCH:
 			apply_gravity(delta)
-			apply_x_movement(delta, CROUCH_SPEED, direction)
+			apply_x_movement(delta, CROUCH_SPEED, direction, ONGROUND_FRICTION)
 			if velocity.x != 0:
 				_animation_player.play("crouch-walk")
 			else:
 				_animation_player.play("crouch-idle")
 		State.JUMP:
 			apply_gravity(delta)
-			apply_x_movement(delta, WALK_SPEED, direction)
+			apply_x_movement(delta, WALK_SPEED, direction, INAIR_FRICTION)
 			if last_state != State.JUMP:
 				var jump_animation = "crouch-jump" if last_state == State.CROUCH else "jump"
 				velocity.y = JUMP_VELOCITY
@@ -68,7 +69,7 @@ func _physics_process(delta: float):
 		State.FALL:
 			apply_gravity(delta)
 			velocity.y += ADDITIONAL_FALL_GRAVITY * delta
-			apply_x_movement(delta, WALK_SPEED, direction)
+			apply_x_movement(delta, WALK_SPEED, direction, INAIR_FRICTION)
 			# TODO: Add all animation.
 			pass
 		State.KNOCKBACK:
@@ -137,11 +138,11 @@ func next_state(current_state: State) -> State:
 	# TODO: If we add an IDLE switch this to idle.
 	return State.WALK
 
-func apply_x_movement(delta: float, speed: float, direction: float):
+func apply_x_movement(delta: float, speed: float, direction: float, friction: float):
 	if direction:
 		velocity.x = move_toward(velocity.x, direction * speed, ACCELERATION * delta)
 	else:
-		velocity.x = move_toward(velocity.x, 0, FRICTION * delta)
+		velocity.x = move_toward(velocity.x, 0, friction * delta)
 
 func apply_gravity(delta: float):
 	if not is_on_floor():
