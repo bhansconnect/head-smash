@@ -10,8 +10,8 @@ extends CharacterBody2D
 
 @export var CROUCH_SPEED: float = 75.0
 @export var WALK_SPEED: float = 400.0
-@export var ACCELERATION: float = 100.0
-@export var FRICTION: float = 200.0
+@export var ACCELERATION: float = 50.0
+@export var FRICTION: float = 75.0
 @export var JUMP_VELOCITY: float = -500.0
 @export var JUMP_RELEASE_VELOCITY: float = -60.0
 @export var ADDITIONAL_FALL_GRAVITY: float = 400.0

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://player/player.gd" id="1_l26e5"]
 [ext_resource type="Texture2D" uid="uid://bwjjlwppq7l38" path="res://art/generated/player.png" id="2_3havw"]
-[ext_resource type="Script" path="res://misc/hurt_box.gd" id="3_6ewy3"]
+[ext_resource type="PackedScene" uid="uid://dbof74qfmoi4o" path="res://misc/hurt_box.tscn" id="3_ffonf"]
 [ext_resource type="Script" path="res://player/input_manager.gd" id="4_28bcc"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_bhjsv"]
@@ -843,10 +843,8 @@ disabled = true
 position = Vector2(0, 4)
 shape = SubResource("CapsuleShape2D_f46rp")
 
-[node name="HurtBox" type="Area2D" parent="."]
+[node name="HurtBox" parent="." instance=ExtResource("3_ffonf")]
 collision_layer = 4
-collision_mask = 0
-script = ExtResource("3_6ewy3")
 
 [node name="CrouchingCollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
 position = Vector2(0, 19)
