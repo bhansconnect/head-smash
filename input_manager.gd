@@ -50,7 +50,7 @@ func _ready():
 	mappings[Device.KEYBOARD][ACTION_RIGHT].append(event)
 	event = InputEventKey.new()
 	event.physical_keycode = KEY_UP
-	mappings[Device.KEYBOARD][ACTION_JUMP].append(event)
+	mappings[Device.KEYBOARD][ACTION_INTERACT].append(event)
 	event = InputEventKey.new()
 	event.physical_keycode = KEY_DOWN
 	mappings[Device.KEYBOARD][ACTION_CROUCH].append(event)
@@ -64,7 +64,7 @@ func _ready():
 	mappings[Device.KEYBOARD][ACTION_RIGHT].append(event)
 	event = InputEventKey.new()
 	event.physical_keycode = KEY_W
-	mappings[Device.KEYBOARD][ACTION_JUMP].append(event)
+	mappings[Device.KEYBOARD][ACTION_INTERACT].append(event)
 	event = InputEventKey.new()
 	event.physical_keycode = KEY_S
 	mappings[Device.KEYBOARD][ACTION_CROUCH].append(event)
@@ -72,7 +72,7 @@ func _ready():
 	# Interact mapping
 	event = InputEventKey.new()
 	event.physical_keycode = KEY_SPACE
-	mappings[Device.KEYBOARD][ACTION_INTERACT] = [event]
+	mappings[Device.KEYBOARD][ACTION_JUMP] = [event]
 	
 	# Shared controller mappings
 	for d in DEVICE_TYPES:
