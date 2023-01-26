@@ -1,7 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://cmimbdadmui2v"]
+[gd_scene load_steps=3 format=3]
 
-[ext_resource type="PackedScene" uid="uid://cnsuckm1vre7g" path="res://tile_map.tscn" id="1_381m1"]
-[ext_resource type="PackedScene" uid="uid://c331v1etrbg4v" path="res://player.tscn" id="2_r8p2t"]
+[ext_resource type="PackedScene" uid="uid://cnsuckm1vre7g" path="res://misc/tile_map.tscn" id="1_381m1"]
+[ext_resource type="PackedScene" uid="uid://coujjf6dw8foh" path="res://player/player.tscn" id="2_r8p2t"]
 
 [node name="Main" type="Node2D"]
 
