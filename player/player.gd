@@ -7,9 +7,11 @@ extends CharacterBody2D
 @onready var _back_ray_cast2d := $BackRayCast2D
 @onready var _jump_buffer_timer := $JumpBufferTimer
 @onready var _coyote_timer := $CoyoteTimer
+@onready var _knockback_timer := $KnockbackTimer
 
 @export var CROUCH_SPEED: float = 75.0
 @export var WALK_SPEED: float = 400.0
+@export var KNOCKBACK_SPEED: float = 500.0
 @export var ACCELERATION: float = 50.0
 @export var FRICTION: float = 75.0
 @export var JUMP_VELOCITY: float = -500.0
@@ -19,13 +21,14 @@ extends CharacterBody2D
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var GRAVITY: float = ProjectSettings.get_setting("physics/2d/default_gravity")
 
-enum State {WALK, CROUCH, JUMP, FALL}
+enum State {WALK, CROUCH, JUMP, FALL, KNOCKBACK}
 
 var state: State = State.WALK
 
 # TODO: bools are very not DOD. Is there a better way to do this?
 var buffered_jump: bool = false
 var just_fell: bool = false
+var apply_knockback: bool = false
 
 func _ready():
 	pass
@@ -67,9 +70,13 @@ func _physics_process(delta: float):
 			apply_x_movement(WALK_SPEED, direction)
 			# TODO: Add all animation.
 			pass
+		State.KNOCKBACK:
+			_animation_player.stop()
+			apply_gravity(delta)
 
 	move_and_slide()
-	handle_sprite_flip(direction)
+	if state != State.KNOCKBACK:
+		handle_sprite_flip(direction)
 	
 	# Emergency reset for now.
 	if velocity.y > 2000:
@@ -78,10 +85,12 @@ func _physics_process(delta: float):
 func next_state(current_state: State) -> State:
 	var on_floor: bool = is_on_floor()
 	var crouch: bool = Input.is_action_pressed("crouch")
-	# TODO: Add coyote timing and pre jump
 	if Input.is_action_just_pressed("jump"):
 		_jump_buffer_timer.start()
 		buffered_jump = true
+
+	if apply_knockback:
+		return State.KNOCKBACK
 
 	match current_state:
 		State.JUMP:
@@ -113,7 +122,7 @@ func next_state(current_state: State) -> State:
 			if !crouch:
 				return State.WALK
 			return State.CROUCH
-		State.FALL:
+		State.FALL, State.KNOCKBACK:
 			if just_fell and buffered_jump:
 				buffered_jump = false
 				return State.JUMP
@@ -155,3 +164,19 @@ func _on_jump_buffer_timer_timeout():
 
 func _on_coyote_timer_timeout():
 	just_fell = false
+
+
+func _on_knockback_timer_timeout():
+	apply_knockback = false
+
+
+func _on_take_damage(_damage: float, hit_position: Vector2):
+	# TODO: Add health damage and animation/effect
+	if apply_knockback:
+		# already in knockback. ignore
+		return
+
+	var knockback_dir = Vector2(1,0).rotated(hit_position.angle_to_point(global_position))
+	velocity = knockback_dir * KNOCKBACK_SPEED
+	apply_knockback = true
+	_knockback_timer.start()

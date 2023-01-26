@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://d0vt3f6shmqch"]
+[gd_scene load_steps=4 format=3 uid="uid://d0vt3f6shmqch"]
 
 [ext_resource type="PackedScene" uid="uid://cnsuckm1vre7g" path="res://misc/tile_map.tscn" id="1_381m1"]
 [ext_resource type="PackedScene" uid="uid://c15o11n2bojwa" path="res://player/player.tscn" id="2_r8p2t"]
+[ext_resource type="PackedScene" uid="uid://c3lgcwyfva5dk" path="res://enemies/slime.tscn" id="3_lqvs4"]
 
 [node name="Main" type="Node2D"]
 
@@ -10,3 +11,6 @@ layer_0/tile_data = PackedInt32Array(917517, 65536, 1, 917518, 65536, 1, 917519,
 
 [node name="Player" parent="." instance=ExtResource("2_r8p2t")]
 position = Vector2(471, 370)
+
+[node name="Slime" parent="." instance=ExtResource("3_lqvs4")]
+position = Vector2(474, 200)

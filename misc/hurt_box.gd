@@ -8,4 +8,4 @@ func _on_area_entered(hit_box: HitBox):
 	if hit_box == null:
 		return
 	
-	emit_signal("take_damage", hit_box.damage)
+	emit_signal("take_damage", hit_box.damage, hit_box.global_position)
