@@ -186,4 +186,9 @@ func _on_take_damage(_damage: float, hit_position: Vector2):
 	knockback_dir.y = minf(-KNOCKUP_MIN, knockback_dir.y)
 	velocity = knockback_dir.normalized() * KNOCKBACK_SPEED
 	apply_knockback = true
+	
+	var knockback_tween := get_tree().create_tween()
+	_sprite2d.modulate = Color(1,0,0,1)
+	knockback_tween.parallel().tween_property(_sprite2d, "modulate", Color(1,1,1,1), _knockback_timer.wait_time)
+	
 	_knockback_timer.start()
