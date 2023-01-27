@@ -17,14 +17,14 @@ const DEVICE_TYPES: Array[Device] = [
 const ACTION_LEFT: String = "left"
 const ACTION_RIGHT: String = "right"
 const ACTION_JUMP: String = "jump"
-const ACTION_CROUCH: String = "crouch"
+const ACTION_CRAWL: String = "crawl"
 const ACTION_INTERACT: String = "interact"
 
 const ACTIONS: Array[String] = [
 	ACTION_LEFT,
 	ACTION_RIGHT,
 	ACTION_JUMP,
-	ACTION_CROUCH,
+	ACTION_CRAWL,
 	ACTION_INTERACT,
 ]
 
@@ -53,7 +53,7 @@ func _ready():
 	mappings[Device.KEYBOARD][ACTION_INTERACT].append(event)
 	event = InputEventKey.new()
 	event.physical_keycode = KEY_DOWN
-	mappings[Device.KEYBOARD][ACTION_CROUCH].append(event)
+	mappings[Device.KEYBOARD][ACTION_CRAWL].append(event)
 	
 	# WASD mapping
 	event = InputEventKey.new()
@@ -67,7 +67,7 @@ func _ready():
 	mappings[Device.KEYBOARD][ACTION_INTERACT].append(event)
 	event = InputEventKey.new()
 	event.physical_keycode = KEY_S
-	mappings[Device.KEYBOARD][ACTION_CROUCH].append(event)
+	mappings[Device.KEYBOARD][ACTION_CRAWL].append(event)
 	
 	# Interact mapping
 	event = InputEventKey.new()
@@ -96,7 +96,7 @@ func _ready():
 		event = InputEventJoypadButton.new()
 		event.button_index = JOY_BUTTON_B
 		event.device = -1
-		mappings[d][ACTION_CROUCH] = [event]
+		mappings[d][ACTION_CRAWL] = [event]
 		event = InputEventJoypadButton.new()
 		event.button_index = JOY_BUTTON_X
 		event.device = -1
@@ -110,7 +110,7 @@ func _ready():
 	event = InputEventJoypadButton.new()
 	event.button_index = JOY_BUTTON_A
 	event.device = -1
-	mappings[Device.SWITCH][ACTION_CROUCH] = [event]
+	mappings[Device.SWITCH][ACTION_CRAWL] = [event]
 	event = InputEventJoypadButton.new()
 	event.button_index = JOY_BUTTON_Y
 	event.device = -1
@@ -178,10 +178,7 @@ func guess_device_type() -> Device:
 	return get_device_type(Input.get_joy_name(0))
 
 func update_device(next_device: Device, _index: int):
-	InputMap.action_erase_events("jump")
-	InputMap.action_erase_events("left")
-	InputMap.action_erase_events("right")
-	InputMap.action_erase_events("crouch")
 	for action in mappings[next_device].keys():
+		InputMap.action_erase_events(action)
 		for event in mappings[next_device][action]:
 			InputMap.action_add_event(action, event)

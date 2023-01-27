@@ -9,8 +9,8 @@ extends CharacterBody2D
 @onready var _coyote_timer := $CoyoteTimer
 @onready var _knockback_timer := $KnockbackTimer
 
-@export var CROUCH_SPEED: float = 75.0
-@export var WALK_SPEED: float = 400.0
+@export var CRAWL_SPEED: float = 75.0
+@export var RUN_SPEED: float = 400.0
 @export var KNOCKBACK_SPEED: float = 500.0
 @export var KNOCKUP_MIN: float = 0.5
 @export var ACCELERATION: float = 3000.0
@@ -23,9 +23,9 @@ extends CharacterBody2D
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var GRAVITY: float = ProjectSettings.get_setting("physics/2d/default_gravity")
 
-enum State {WALK, CROUCH, JUMP, FALL, KNOCKBACK}
+enum State {RUN, CRAWL, JUMP, FALL, KNOCKBACK}
 
-var state: State = State.WALK
+var state: State = State.RUN
 
 # TODO: bools are very not DOD. Is there a better way to do this?
 var buffered_jump: bool = false
@@ -42,42 +42,50 @@ func _physics_process(delta: float):
 	var direction: float = Input.get_axis("left", "right")
 	
 	match (state):
-		State.WALK:
+		State.RUN:
 			apply_gravity(delta)
-			apply_x_movement(delta, WALK_SPEED, direction, ONGROUND_FRICTION)
+			apply_x_movement(delta, RUN_SPEED, direction, ONGROUND_FRICTION)
+			var flipped_dir := signf(velocity.x) * signf(direction) == -1
+			var matched_dir := signf(velocity.x) * signf(direction) == 1
+			if flipped_dir:
+				_animation_player.play("turn")
+				_animation_player.queue("run")
 			if velocity.x != 0:
-				_animation_player.play("walk")
+				if matched_dir || _animation_player.current_animation != "turn":
+					_animation_player.play("run")
 			else:
-				_animation_player.play("idle")
-		State.CROUCH:
+				_animation_player.play("standing-idle")
+		State.CRAWL:
 			apply_gravity(delta)
-			apply_x_movement(delta, CROUCH_SPEED, direction, ONGROUND_FRICTION)
+			apply_x_movement(delta, CRAWL_SPEED, direction, ONGROUND_FRICTION)
 			if velocity.x != 0:
-				_animation_player.play("crouch-walk")
+				_animation_player.play("crawl")
 			else:
-				_animation_player.play("crouch-idle")
+				_animation_player.play("crawl-idle")
 		State.JUMP:
 			apply_gravity(delta)
-			apply_x_movement(delta, WALK_SPEED, direction, INAIR_FRICTION)
+			apply_x_movement(delta, RUN_SPEED, direction, INAIR_FRICTION)
 			if last_state != State.JUMP:
-				var jump_animation = "crouch-jump" if last_state == State.CROUCH else "jump"
+				var jump_animation = "crawl-jump" if last_state == State.CRAWL else "jump"
 				velocity.y = JUMP_VELOCITY
 				_animation_player.play(jump_animation)
 				_animation_player.seek(0.5, true)
+				_animation_player.queue("up-air")
 			if !Input.is_action_pressed("jump") and velocity.y < JUMP_RELEASE_VELOCITY:
 				velocity.y = JUMP_RELEASE_VELOCITY
 		State.FALL:
+			_animation_player.play("falling")
 			apply_gravity(delta)
 			velocity.y += ADDITIONAL_FALL_GRAVITY * delta
-			apply_x_movement(delta, WALK_SPEED, direction, INAIR_FRICTION)
+			apply_x_movement(delta, RUN_SPEED, direction, INAIR_FRICTION)
 			# TODO: Add all animation.
 			pass
 		State.KNOCKBACK:
-			_animation_player.stop()
+			_animation_player.play("falling")
 			apply_gravity(delta)
 
 	move_and_slide()
-	if state != State.KNOCKBACK:
+	if state != State.KNOCKBACK && _animation_player.current_animation != "turn":
 		handle_sprite_flip(direction)
 	
 	# Emergency reset for now.
@@ -86,7 +94,7 @@ func _physics_process(delta: float):
 
 func next_state(current_state: State) -> State:
 	var on_floor: bool = is_on_floor()
-	var crouch: bool = Input.is_action_pressed("crouch")
+	var crawl: bool = Input.is_action_pressed("crawl")
 	if Input.is_action_just_pressed("jump"):
 		_jump_buffer_timer.start()
 		buffered_jump = true
@@ -99,7 +107,7 @@ func next_state(current_state: State) -> State:
 			if velocity.y >= 0:
 				return State.FALL
 			return State.JUMP
-		State.WALK:
+		State.RUN:
 			if !on_floor:
 				_coyote_timer.start()
 				just_fell = true
@@ -107,13 +115,13 @@ func next_state(current_state: State) -> State:
 			if buffered_jump:
 				buffered_jump = false
 				return State.JUMP
-			if crouch:
-				return State.CROUCH
-			return State.WALK
-		State.CROUCH:
+			if crawl:
+				return State.CRAWL
+			return State.RUN
+		State.CRAWL:
 			if _front_ray_cast2d.is_colliding() or _back_ray_cast2d.is_colliding():
-				# Something is blocking uncrouching. Must stay crouched.
-				return State.CROUCH
+				# Something is blocking standing up. Must stay crawling.
+				return State.CRAWL
 			if !on_floor:
 				_coyote_timer.start()
 				just_fell = true
@@ -121,22 +129,22 @@ func next_state(current_state: State) -> State:
 			if buffered_jump:
 				buffered_jump = false
 				return State.JUMP
-			if !crouch:
-				return State.WALK
-			return State.CROUCH
+			if !crawl:
+				return State.RUN
+			return State.CRAWL
 		State.FALL, State.KNOCKBACK:
 			if just_fell and buffered_jump:
 				buffered_jump = false
 				return State.JUMP
 			if on_floor:
-				if crouch:
-					return State.CROUCH
+				if crawl:
+					return State.CRAWL
 				else:
-					return State.WALK
+					return State.RUN
 			return State.FALL
 	# Defualt
 	# TODO: If we add an IDLE switch this to idle.
-	return State.WALK
+	return State.RUN
 
 func apply_x_movement(delta: float, speed: float, direction: float, friction: float):
 	if direction:

@@ -50,7 +50,7 @@ right={
 "deadzone": 0.5,
 "events": []
 }
-crouch={
+crawl={
 "deadzone": 0.5,
 "events": []
 }
