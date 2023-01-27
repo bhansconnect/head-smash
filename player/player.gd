@@ -8,6 +8,7 @@ extends CharacterBody2D
 @onready var _jump_buffer_timer := $JumpBufferTimer
 @onready var _coyote_timer := $CoyoteTimer
 @onready var _knockback_timer := $KnockbackTimer
+@onready var _reset_timer := $ResetTimer
 
 @export var CRAWL_SPEED: float = 75.0
 @export var RUN_SPEED: float = 400.0
@@ -33,7 +34,7 @@ var just_fell: bool = false
 var apply_knockback: bool = false
 
 func _ready():
-	pass
+	PlayerData.health_changed.connect(_on_health_changed)
 
 func _physics_process(delta: float):
 	var last_state: State = state
@@ -176,8 +177,7 @@ func _on_knockback_timer_timeout():
 	apply_knockback = false
 
 
-func _on_take_damage(_damage: float, hit_position: Vector2):
-	# TODO: Add health damage and animation/effect
+func _on_take_damage(damage: int, hit_position: Vector2):
 	if apply_knockback:
 		# already in knockback. ignore
 		return
@@ -192,3 +192,18 @@ func _on_take_damage(_damage: float, hit_position: Vector2):
 	knockback_tween.parallel().tween_property(_sprite2d, "modulate", Color(1,1,1,1), _knockback_timer.wait_time)
 	
 	_knockback_timer.start()
+	
+	PlayerData.change_health(-1*damage)
+
+
+func _on_health_changed(new_health: int):
+	if new_health == 0:
+		# Trap the player in knockback and reset the game.
+		_knockback_timer.stop()
+		_reset_timer.start()
+
+
+func _on_reset_timer_timeout():
+	# TODO: Proper game over and restart.
+	PlayerData.reset_health()
+	get_tree().reload_current_scene()
