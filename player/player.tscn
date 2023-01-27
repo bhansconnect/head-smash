@@ -1272,7 +1272,7 @@ texture_filter = 1
 texture = ExtResource("2_3havw")
 hframes = 7
 vframes = 6
-frame = 29
+frame = 5
 metadata/_aseprite_wizard_config_ = {
 "layer": "",
 "o_ex_p": "",

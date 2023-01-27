@@ -59,7 +59,7 @@ func _physics_process(delta: float):
 			apply_gravity(delta)
 			apply_x_movement(delta, CRAWL_SPEED, direction, ONGROUND_FRICTION)
 			if velocity.x != 0:
-				_animation_player.play("crawl")
+				_animation_player.play("crawl", -1, 1.6)
 			else:
 				_animation_player.play("crawl-idle")
 		State.JUMP:
