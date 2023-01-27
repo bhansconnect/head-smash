@@ -1,9 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://d0vt3f6shmqch"]
+[gd_scene load_steps=5 format=3 uid="uid://caccge80s4ifu"]
 
 [ext_resource type="PackedScene" uid="uid://cnsuckm1vre7g" path="res://misc/tile_map.tscn" id="1_381m1"]
 [ext_resource type="PackedScene" uid="uid://c15o11n2bojwa" path="res://player/player.tscn" id="2_r8p2t"]
 [ext_resource type="PackedScene" uid="uid://c3lgcwyfva5dk" path="res://enemies/slime.tscn" id="3_lqvs4"]
-[ext_resource type="Script" path="res://levels/hearts.gd" id="4_bna1q"]
+[ext_resource type="PackedScene" uid="uid://d0qu5hdd0xkjd" path="res://hud/hearts.tscn" id="4_g26ur"]
 
 [node name="Main" type="Node2D"]
 
@@ -16,5 +16,4 @@ position = Vector2(471, 370)
 [node name="Slime" parent="." instance=ExtResource("3_lqvs4")]
 position = Vector2(474, 200)
 
-[node name="Hearts" type="CanvasLayer" parent="."]
-script = ExtResource("4_bna1q")
+[node name="Hearts" parent="." instance=ExtResource("4_g26ur")]

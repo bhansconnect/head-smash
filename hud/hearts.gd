@@ -3,7 +3,7 @@ extends CanvasLayer
 @export var BASE_HEART_POSITION := Vector2(16, 16)
 @export var HEART_X_OFFSET := 24
 
-var heart_scene := preload("res://player/heart.tscn")
+var heart_scene := preload("res://hud/heart.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

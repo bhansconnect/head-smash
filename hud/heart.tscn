@@ -1,7 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://dcm8650qnyr7r"]
+[gd_scene load_steps=7 format=3 uid="uid://dj5ldtquvrljb"]
 
-[ext_resource type="Texture2D" uid="uid://objfg2qsltav" path="res://art/generated/heart.png" id="1_bhsmj"]
-[ext_resource type="Script" path="res://player/heart.gd" id="2_rfcby"]
+[ext_resource type="Texture2D" uid="uid://objfg2qsltav" path="res://art/generated/heart.png" id="1_gbbut"]
+[ext_resource type="Script" path="res://hud/heart.gd" id="2_jdka1"]
 
 [sub_resource type="Animation" id="Animation_u6ywk"]
 length = 0.6
@@ -15,7 +15,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("1_bhsmj")]
+"values": [ExtResource("1_gbbut")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -78,7 +78,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("1_bhsmj")]
+"values": [ExtResource("1_gbbut")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -155,7 +155,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("1_bhsmj")]
+"values": [ExtResource("1_gbbut")]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -216,10 +216,10 @@ _data = {
 [node name="Heart" type="Sprite2D"]
 texture_filter = 1
 scale = Vector2(1.5, 1.5)
-texture = ExtResource("1_bhsmj")
+texture = ExtResource("1_gbbut")
 hframes = 4
 vframes = 3
-script = ExtResource("2_rfcby")
+script = ExtResource("2_jdka1")
 metadata/_aseprite_wizard_config_ = {
 "layer": "",
 "o_ex_p": "",
