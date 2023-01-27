@@ -91,6 +91,7 @@ func _physics_process(delta: float):
 	
 	# Emergency reset for now.
 	if velocity.y > 2000:
+		PlayerData.reset_health()
 		get_tree().reload_current_scene()
 
 func next_state(current_state: State) -> State:
