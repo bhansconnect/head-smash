@@ -13,8 +13,8 @@ extends CharacterBody2D
 @export var RUN_SPEED: float = 400.0
 @export var KNOCKBACK_SPEED: float = 500.0
 @export var KNOCKUP_MIN: float = 0.5
-@export var ACCELERATION: float = 3000.0
-@export var ONGROUND_FRICTION: float = 4500.0
+@export var ACCELERATION: float = 1500.0
+@export var ONGROUND_FRICTION: float = 1500.0
 @export var INAIR_FRICTION: float = 1000.0
 @export var JUMP_VELOCITY: float = -500.0
 @export var JUMP_RELEASE_VELOCITY: float = -60.0
@@ -157,6 +157,10 @@ func apply_gravity(delta: float):
 		velocity.y += GRAVITY * delta
 
 func handle_sprite_flip(direction: float):
+	if velocity.x == 0 and direction == 0:
+		# No data, don't update.
+		return
+
 	_sprite2d.flip_h = (velocity.x == 0 and direction < 0) or velocity.x < 0
 
 
