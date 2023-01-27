@@ -1272,7 +1272,7 @@ texture_filter = 1
 texture = ExtResource("2_3havw")
 hframes = 7
 vframes = 6
-frame = 34
+frame = 29
 metadata/_aseprite_wizard_config_ = {
 "layer": "",
 "o_ex_p": "",
@@ -1308,6 +1308,7 @@ position = Vector2(0, 4)
 shape = SubResource("CapsuleShape2D_f46rp")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+playback_speed = 0.5
 libraries = {
 "": SubResource("AnimationLibrary_1kvbk")
 }
@@ -1322,7 +1323,6 @@ target_position = Vector2(2.08165e-12, -30)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
-drag_horizontal_enabled = true
 drag_vertical_enabled = true
 drag_left_margin = 0.4
 drag_top_margin = 0.4
