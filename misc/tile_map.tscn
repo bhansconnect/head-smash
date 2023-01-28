@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://cnsuckm1vre7g"]
+[gd_scene load_steps=5 format=3 uid="uid://cnsuckm1vre7g"]
 
 [ext_resource type="Texture2D" uid="uid://ci1h7ghq0jvqb" path="res://art/basic_stone_texture.png" id="1_2dvyc"]
+[ext_resource type="Script" path="res://misc/tile_map.gd" id="2_dd4jx"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wft5d"]
 texture = ExtResource("1_2dvyc")
@@ -8,6 +9,8 @@ texture_region_size = Vector2i(32, 32)
 1:0/0 = 0
 1:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
 1:0/0/physics_layer_0/angular_velocity = 0.0
+1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+1:0/0/physics_layer_0/polygon_0/one_way = true
 1:1/0 = 0
 1:1/0/physics_layer_0/linear_velocity = Vector2(0, 0)
 1:1/0/physics_layer_0/angular_velocity = 0.0
@@ -21,4 +24,5 @@ sources/0 = SubResource("TileSetAtlasSource_wft5d")
 [node name="TileMap" type="TileMap"]
 tile_set = SubResource("TileSet_bmd3k")
 format = 2
+script = ExtResource("2_dd4jx")
 metadata/_edit_group_ = true
