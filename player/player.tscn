@@ -1322,9 +1322,9 @@ position = Vector2(-9, 6)
 target_position = Vector2(2.08165e-12, -30)
 
 [node name="Camera2D" type="Camera2D" parent="."]
+offset = Vector2(2.08165e-12, 2.08165e-12)
 current = true
 drag_vertical_enabled = true
-drag_left_margin = 0.4
 drag_top_margin = 0.4
 
 [node name="JumpBufferTimer" type="Timer" parent="."]
