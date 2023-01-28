@@ -7,6 +7,7 @@ extends CharacterBody2D
 
 @export var DAMAGE: int = 1
 @export var SPEED: float = 50.0
+@export var ANIMATION_SPEED: float = 1.0
 @export var START_FLIPPED: bool = false
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -19,6 +20,7 @@ func _ready():
 	if START_FLIPPED:
 		flip()
 	_animation_player.play("move")
+	_animation_player.playback_speed = ANIMATION_SPEED
 
 func _physics_process(delta: float):
 	# Add the gravity.
