@@ -11,7 +11,7 @@ extends CharacterBody2D
 @onready var _reset_timer := $ResetTimer
 
 @export var CRAWL_SPEED: float = 75.0
-@export var RUN_SPEED: float = 400.0
+@export var RUN_SPEED: float = 300.0
 @export var KNOCKBACK_SPEED: float = 500.0
 @export var KNOCKUP_MIN: float = 0.5
 @export var ACCELERATION: float = 1800.0
