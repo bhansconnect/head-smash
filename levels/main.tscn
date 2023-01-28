@@ -85,5 +85,6 @@ position = Vector2(-1768, 52)
 [node name="KingSlime" parent="." instance=ExtResource("3_lqvs4")]
 position = Vector2(-4512, 340)
 scale = Vector2(10, 10)
+DAMAGE = 10
 
 [node name="Hearts" parent="." instance=ExtResource("4_g26ur")]

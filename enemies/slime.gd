@@ -5,6 +5,7 @@ extends CharacterBody2D
 @onready var _collision_shape2d := $CollisionShape2D
 @onready var _hitbox := $HitBox
 
+@export var DAMAGE: int = 1
 @export var SPEED: float = 50.0
 @export var START_FLIPPED: bool = false
 
@@ -14,6 +15,7 @@ var gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity")
 var direction: float = 1.0
 
 func _ready():
+	$HitBox.damage = DAMAGE
 	if START_FLIPPED:
 		flip()
 	_animation_player.play("move")
