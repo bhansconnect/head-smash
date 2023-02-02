@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://objfg2qsltav" path="res://art/generated/heart.png" id="1_gbbut"]
 [ext_resource type="Script" path="res://hud/heart.gd" id="2_jdka1"]
 
-[sub_resource type="Animation" id="Animation_bfx8i"]
+[sub_resource type="Animation" id="Animation_1nqis"]
 length = 0.6
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -66,7 +66,7 @@ tracks/4/keys = {
 "values": [6, 7, 8, 9, 10, 11]
 }
 
-[sub_resource type="Animation" id="Animation_6gdu1"]
+[sub_resource type="Animation" id="Animation_lstcy"]
 length = 0.1
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -129,7 +129,7 @@ tracks/4/keys = {
 "values": [0]
 }
 
-[sub_resource type="Animation" id="Animation_xuol8"]
+[sub_resource type="Animation" id="Animation_mfoio"]
 length = 0.7
 tracks/0/type = "method"
 tracks/0/imported = false
@@ -206,11 +206,11 @@ tracks/5/keys = {
 "values": [0, 0, 1, 2, 3, 4, 5]
 }
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_fwfx7"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_d3jw1"]
 _data = {
-"gain": SubResource("Animation_bfx8i"),
-"idle": SubResource("Animation_6gdu1"),
-"lose": SubResource("Animation_xuol8")
+"gain": SubResource("Animation_1nqis"),
+"idle": SubResource("Animation_lstcy"),
+"lose": SubResource("Animation_mfoio")
 }
 
 [node name="Heart" type="Sprite2D"]
@@ -233,5 +233,5 @@ metadata/_aseprite_wizard_config_ = {
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_fwfx7")
+"": SubResource("AnimationLibrary_d3jw1")
 }
